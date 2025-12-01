@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "Security Link",
+    "version": "1.0.0",
+    "author": "Ukraine:echo_29",
+    "description": "Security Link chromium browser assistant. This project was created in memory of my teacher who was great man. callname => `SOKOL`",
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "tabs",
+        "storage",
+        "webRequest",
+        "webRequestBlocking",
+        "webNavigation",
+        "http://*/*",
+        "https://*/*"
+    ],
+    "background": {
+        "service_worker": "service_worker.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "service_content_scripts/content_script.js"
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "UI_components/bom_options_popup/bom_options_popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
+    }
+}
