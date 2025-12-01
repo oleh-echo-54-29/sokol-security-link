@@ -1,6 +1,7 @@
 import { Events } from "../services/_constant";
 import { generateCheckCurrentLinkEvent } from "../services/event_generator_service";
 
+
 /**
  * Monitors DOM mutations to detect when anchor elements with href attributes are dynamically added to the page.
  * 
