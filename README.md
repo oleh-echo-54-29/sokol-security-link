@@ -22,6 +22,7 @@ functions:
     - enable link scan only by mouse hovering,
     - enable cache analyzed links, 
     - set maximize/minimize popup state,
+    - enable alarm messages in case of threats.
 
 mininized popup:
     - shows animated logo when user hover any linked element and analyze it with the security link agent if not analyzed yet or get it`s cached description.
