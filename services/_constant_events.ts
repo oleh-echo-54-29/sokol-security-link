@@ -6,4 +6,5 @@ export enum Events {
     CHECK_REPLACED_LINK = "check-replaced-link",
     CHECK_INSERTED_LINK = "check-inserted-link",
     CHECK_INSERTED_ADJACENT_LINK = "check-inserted-adjacent-link",
+    HIGHLIGHT_HOVERED_LINK = "highlicht-hovored-link",
 }

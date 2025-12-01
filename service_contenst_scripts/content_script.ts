@@ -1,4 +1,4 @@
-import { Events } from "../services/_constant";
+import { Events } from "../services/_constant_events";
 import { generateCheckCurrentLinkEvent } from "../services/event_generator_service";
 
 

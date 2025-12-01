@@ -1,4 +1,4 @@
-import { Events } from "./_constant";
+import { Events } from "./_constant_events";
 import { generateCheckCurrentLinkEvent } from "./event_generator_service";
 
 
@@ -7,10 +7,11 @@ export const sethooksToLinkElements = () => {
 
     for (let anchor of anchors) {
         anchor.addEventListener("mouseover", (e) => {
-            generateCheckCurrentLinkEvent(
-                Events.CHECK_CURRENT_LINK,
-                anchor.getAttribute("href") || "",
-            );
+            const eventCommand =
+                generateCheckCurrentLinkEvent(
+                    Events.HIGHLIGHT_HOVERED_LINK,
+                    anchor.getAttribute("href") || "",
+                );
         });
     }
 }

@@ -1,4 +1,4 @@
-import { Events } from "./_constant";
+import { Events } from "./_constant_events";
 
 export const generateCheckCurrentLinkEvent = (specialCommand: string, elementLink: string) => {
     if (!specialCommand || !elementLink) return;
