@@ -9,7 +9,6 @@ import { INDEXED_DB, type LinkRecord, type StoredLinkRecord } from "../_constant
  * Initialize and open the IndexedDB database
  * Creates the object store if it doesn't exist
  */
-
 export async function openDbConnection(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(INDEXED_DB.DB_NAME, INDEXED_DB.DB_VERSION_DEFAULT);
@@ -26,9 +25,9 @@ export async function openDbConnection(): Promise<IDBDatabase> {
             const db = (event.target as IDBOpenDBRequest).result;
 
             // Create object store if it doesn't exist
-            if (!db.objectStoreNames.contains(INDEXED_DB.DB_NAME)) {
-                const store = db.createObjectStore(INDEXED_DB.DB_NAME, { keyPath: 'key', autoIncrement: true });
-                store.createIndex('byDate', 'key', { unique: false });
+            if (!db.objectStoreNames.contains(INDEXED_DB.STORE_NAME)) {
+                const store = db.createObjectStore(INDEXED_DB.STORE_NAME);
+                store.createIndex(INDEXED_DB.INDEX, INDEXED_DB.INDEX, { unique: false });
             }
         };
     });
@@ -56,8 +55,8 @@ export async function storeLink(record: LinkRecord): Promise<number> {
     const key = Date.now();
 
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction(INDEXED_DB.DB_NAME, 'readwrite');
-        const store = transaction.objectStore(INDEXED_DB.DB_NAME);
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
         const request = store.add(record, key);
 
         request.onsuccess = () => {
@@ -79,8 +78,8 @@ export async function getLink(key: number): Promise<LinkRecord | null> {
     const db = await ensureDbConnection();
 
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction(INDEXED_DB.DB_NAME, 'readonly');
-        const store = transaction.objectStore(INDEXED_DB.DB_NAME);
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readonly');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
         const request = store.get(key);
 
         request.onsuccess = () => {
@@ -101,8 +100,8 @@ export async function getAllLinks(): Promise<StoredLinkRecord[]> {
     const db = await ensureDbConnection();
 
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction(INDEXED_DB.DB_NAME, 'readonly');
-        const store = transaction.objectStore(INDEXED_DB.DB_NAME);
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readonly');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
         const request = store.openCursor();
         const results: StoredLinkRecord[] = [];
 
@@ -134,8 +133,8 @@ export async function updateLink(key: number, record: LinkRecord): Promise<void>
     const db = await ensureDbConnection();
 
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction(INDEXED_DB.DB_NAME, 'readwrite');
-        const store = transaction.objectStore(INDEXED_DB.DB_NAME);
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
         const request = store.put(record, key);
 
         request.onsuccess = () => {
@@ -156,8 +155,8 @@ export async function deleteLink(key: number): Promise<void> {
     const db = await ensureDbConnection();
 
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction(INDEXED_DB.DB_NAME, 'readwrite');
-        const store = transaction.objectStore(INDEXED_DB.DB_NAME);
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
         const request = store.delete(key);
 
         request.onsuccess = () => {
@@ -177,8 +176,8 @@ export async function clearAll(): Promise<void> {
     const db = await ensureDbConnection();
 
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction(INDEXED_DB.DB_NAME, 'readwrite');
-        const store = transaction.objectStore(INDEXED_DB.DB_NAME);
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
         const request = store.clear();
 
         request.onsuccess = () => {
@@ -199,8 +198,8 @@ export async function getCount(): Promise<number> {
     const db = await ensureDbConnection();
 
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction(INDEXED_DB.DB_NAME, 'readonly');
-        const store = transaction.objectStore(INDEXED_DB.DB_NAME);
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readonly');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
         const request = store.count();
 
         request.onsuccess = () => {
@@ -209,6 +208,47 @@ export async function getCount(): Promise<number> {
 
         request.onerror = () => {
             reject(new Error(`Failed to get count: ${request.error}`));
+        };
+    });
+}
+
+/**
+ * Remove all link records older than 24 hours from the database
+ * Queries by date index and deletes entries where (Date.now() - key) > 86,400,000 ms
+ * @returns Number of records deleted
+ */
+export async function updateDBdueToCurrentDate(): Promise<number> {
+    const db = await ensureDbConnection();
+    const now = Date.now();
+    const oneDayInMs = 86400000; // 60 * 60 * 24 * 1000
+
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(INDEXED_DB.STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(INDEXED_DB.STORE_NAME);
+        const index = store.index(INDEXED_DB.INDEX);
+        const request = index.openCursor();
+        let deletedCount = 0;
+
+        request.onsuccess = (event) => {
+            const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+            if (cursor) {
+                const key = cursor.key as number;
+                const age = now - key;
+
+                // If record is older than 24 hours, delete it
+                if (age > oneDayInMs) {
+                    cursor.delete();
+                    deletedCount++;
+                }
+                cursor.continue();
+            } else {
+                // All records processed
+                resolve(deletedCount);
+            }
+        };
+
+        request.onerror = () => {
+            reject(new Error(`Failed to update database: ${request.error}`));
         };
     });
 }
