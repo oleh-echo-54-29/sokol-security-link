@@ -1,6 +1,5 @@
-import { Events } from "./_constant_events";
+import { Events } from "./constatnt_enums/_constant_events";
 import { generateCheckCurrentLinkEvent } from "./event_generator_service";
-
 
 export const sethooksToLinkElements = () => {
     const anchors = document.querySelectorAll("[href]")
@@ -15,6 +14,3 @@ export const sethooksToLinkElements = () => {
         });
     }
 }
-
-
-
