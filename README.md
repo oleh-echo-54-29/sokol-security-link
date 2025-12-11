@@ -13,16 +13,22 @@ npm install
 npm run build
 ```
 
-
+teckStack:
+    - typescript
+    - chromium API
+    - tailwindcss
+    - ReactJS
+    - Vite
 
 options popup:
-functions:
-    - enable run pages links scan without mouse hovering,
-    - enable listen to anchors appearance dynamicaly,
-    - enable link scan only by mouse hovering,
-    - enable cache analyzed links, 
+available options:
+    - enable/disable run pages links scan without mouse hovering,
+    - enable/disable listen to anchors appearance dynamicaly,
+    - enable/disable link scan only by mouse hovering,
+    - enable/disable cache analyzed links, 
+    - enable/disable alarm messages in case of threats.
+    - enable/disable intercept/analize/allow/disallow redirections from the page (in case of any background process).
     - set maximize/minimize popup state,
-    - enable alarm messages in case of threats.
 
 mininized popup:
     - shows animated logo when user hover any linked element and analyze it with the security link agent if not analyzed yet or get it`s cached description.

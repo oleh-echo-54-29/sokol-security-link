@@ -1,5 +1,6 @@
-import { Events } from "./constatnt_enums/_constant_events";
-import { generateCheckCurrentLinkEvent } from "./event_generator_service";
+import { Events } from "./common/_constant_events.js";
+import { generateCheckCurrentLinkEvent } from "./event_generator_service.tx";
+
 
 export const sethooksToLinkElements = () => {
     const anchors = document.querySelectorAll("[href]")

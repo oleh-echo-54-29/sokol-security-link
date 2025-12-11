@@ -6,19 +6,19 @@
     // "outDir": "./dist",
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "esnext",
+    "module": "nodenext",
     "target": "esnext",
     "lib": [
       "DOM",
       "DOM.Iterable",
-      "ES2021"
+      "ES2021",
+      "esnext"
     ],
     "types": [
-      "chrome"
+      "chrome",
+      "node"
     ],
     // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
     // and npm install -D @types/node
     // Other Outputs
     "sourceMap": true,
@@ -35,12 +35,13 @@
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
     // Recommended Options
-    // "moduleResolution": "node16",
+    "resolveJsonModule": true,
     "strict": true,
     "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "moduleDetection": "force",
+    "moduleResolution": "nodenext",
     "skipLibCheck": true,
   }
 }

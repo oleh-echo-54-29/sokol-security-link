@@ -2,7 +2,6 @@
     "manifest_version": 3,
     "name": "Security Link",
     "version": "1.0.0",
-    "author": "Ukraine:echo_29",
     "description": "Security Link chromium browser assistant. This project was created in memory of my teacher who was great man. callname => `SOKOL`",
     "permissions": [
         "scripting",

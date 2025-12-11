@@ -3,7 +3,7 @@
  * Manages storage of link records with timestamp keys
  */
 
-import { INDEXED_DB, type LinkRecord, type StoredLinkRecord } from "../constatnt_enums/_constants_indexedDB";
+import { INDEXED_DB, type LinkRecord, type StoredLinkRecord } from "../common/_constants_indexedDB";
 
 /**
  * Initialize and open the IndexedDB database
