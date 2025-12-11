@@ -1,5 +1,5 @@
 import { Events } from "./common/_constant_events.js";
-import { generateCheckCurrentLinkEvent } from "./event_generator_service.tx";
+import { generateCheckCurrentLinkEvent } from "./event_generator_service.js";
 
 /**
  * Monitors DOM mutations to detect when anchor elements with href attributes are dynamically added to the page.
